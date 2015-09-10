@@ -61,38 +61,33 @@ exports.localAuth = function (username, password) {
 		}
 
 		console.log("querying for user '" + username + "'...");
-		var query = client.query("SELECT * FROM users WHERE name='" + username + "'", function(err, result) {
+		client.query("SELECT * FROM users WHERE name='" + username + "'", function(err, result) {
 			if (err) {
 				return console.error('error running query', err);
 			}
-		});
-		query.on('row', function(row) {
-			console.log("row:");
-			console.log(row);
-			console.log('username found');
-			var hash = row.pass;
-			console.log("compare: " + bcrypt.compareSync(password, hash));
-			if (bcrypt.compareSync(password, hash)) {
-				console.log("logging in " + row.name + "...");
-				var user = {
-					"username": username,
-					"password": hash,
-					"avatar": "https://raw.githubusercontent.com/cburmeister/placepuppy/master/placepuppy/static/img/puppy.jpeg"
+			if (result.rows.length > 0) {
+				console.log("row:");
+				console.log(row);
+				console.log('username found');
+				var hash = row.pass;
+				console.log("compare: " + bcrypt.compareSync(password, hash));
+				if (bcrypt.compareSync(password, hash)) {
+					console.log("logging in " + row.name + "...");
+					var user = {
+						"username": username,
+						"password": hash,
+						"avatar": "https://raw.githubusercontent.com/cburmeister/placepuppy/master/placepuppy/static/img/puppy.jpeg"
+					}
+					deferred.resolve(user);
+				} else {
+					console.log("PASSWORDS DO NOT MATCH");
+					deferred.resolve(false);
 				}
-				deferred.resolve(user);
 			} else {
-				console.log("PASSWORDS DO NOT MATCH");
 				deferred.resolve(false);
+				console.log("COULD NOT FIND USER IN DB FOR SIGNIN");
 			}
-			return deferred.promise;
 		});
-
-		// After all data is returned, close connection and return results
-		query.on('end', function() {
-			client.end();
-		});
-		//deferred.resolve(false);
-		//console.log("COULD NOT FIND USER IN DB FOR SIGNIN");
 	});
 	return deferred.promise;
 }

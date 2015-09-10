@@ -93,7 +93,7 @@ passport.use('local-signup', new LocalStrategy(
 passport.use(new TwitterStrategy({
 	consumerKey: config.twitter.key,
 	consumerSecret: config.twitter.secret,
-	callbackURL: "https://cookie0.de:8080/auth/twitter/callback"
+	callbackURL: config.twitter.callback
 	},
 	function(token, tokenSecret, profile, done) {
 		strategy = "twitter";
@@ -118,7 +118,7 @@ passport.use(new TwitterStrategy({
 passport.use(new GoogleStrategy({
 		clientID: config.google.id,
 		clientSecret: config.google.secret,
-		callbackURL: "https://cookie0.de:8080/auth/google/callback"
+		callbackURL: config.google.callback
 	},
 	function(accessToken, refreshToken, profile, done) {
 		strategy = "google";
