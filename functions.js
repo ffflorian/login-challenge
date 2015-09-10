@@ -3,6 +3,8 @@ var bcrypt = require('bcryptjs'),
 	Q = require('q'),
 	pg = require('pg');
 
+var config = require('./config.js');
+
 //used in local-signup strategy
 exports.localReg = function (username, password) {
 	var deferred = Q.defer();
@@ -52,7 +54,7 @@ exports.localReg = function (username, password) {
 //if user doesn't exist or password doesn't match tell them it failed
 exports.localAuth = function (username, password) {
 	var deferred = Q.defer();
-	var conString = "postgres://postgres:bla123@localhost/challenge";
+	var conString = config.postgres;
 	var client = new pg.Client(conString);
 	//check if username is already assigned in our database
 

@@ -151,7 +151,7 @@ app.use(cookieParser());
 app.use(bodyParser.urlencoded({ extended: false }));
 app.use(bodyParser.json());
 app.use(methodOverride('X-HTTP-Method-Override'));
-app.use(session({secret: config.session.secret, saveUninitialized: true, resave: true}));
+app.use(session({secret: config.session, saveUninitialized: true, resave: true}));
 app.use(passport.initialize());
 app.use(passport.session());
 
