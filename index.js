@@ -103,11 +103,9 @@ passport.use(new TwitterStrategy({
 				console.log("user:");
 				console.log(user);
 				console.log("LOGGED IN AS: " + user.username);
-				//req.session.success = 'You are successfully logged in ' + user.username + '!';
 				return done(null, user);
 			} else if (!user) {
 				console.log("COULD NOT LOG IN");
-				//req.session.error = 'Could not log user in. Please try again.';
 				return done(null, user);
 			}
 		})
@@ -128,11 +126,9 @@ passport.use(new GoogleStrategy({
 		.then(function (user) {
 			if (user) {
 				console.log("LOGGED IN AS: " + user.username);
-				//req.session.success = 'You are successfully logged in ' + user.username + '!';
 				return done(null, user);
 			} else if (!user) {
 				console.log("COULD NOT LOG IN");
-				//req.session.error = 'Could not log user in. Please try again.';
 				return done(null, user);
 			}
 		})
@@ -195,9 +191,6 @@ app.get('/signin', function(req, res){
 });
 
 //displays our secret page
-/*app.get('/secret', ensureAuthenticated, function(req, res){
-    res.render('secret');
-});*/
 app.get('/secret', function(req, res){
 	res.render('secret', {user: req.user});
 });
