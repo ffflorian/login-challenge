@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html lang="en">
+	<head>
+		<meta charset="utf-8">
+		<meta http-equiv="X-UA-Compatible" content="IE=edge">
+		<meta name="viewport" content="width=device-width, initial-scale=1">
+		<meta name="description" content="User Authentication">
+		<title>User Authentication</title>
+		<link rel="stylesheet" href="//netdna.bootstrapcdn.com/bootstrap/3.1.1/css/bootstrap.min.css">
+	</head>
+	<body>
+		<div class="container">
+			<nav class="navbar navbar-default" role="navigation">
+				<div class="container-fluid">
+					<div class="navbar-header">
+						<button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#bs-example-navbar-collapse-1">
+							<span class="sr-only">Toggle navigation</span>
+							<span class="icon-bar"></span>
+							<span class="icon-bar"></span>
+							<span class="icon-bar"></span>
+						</button>
+					</div>
+					<div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
+						<ul class="nav navbar-nav">
+							<li>
+								{{#if user}}
+								<p class="navbar-text">
+									<img src="{{user.avatar}}" width="20" height="20">
+										Hi <strong>{{user.username}}</strong>!
+								</p>
+							</li>
+						</ul>
+						<ul class="nav navbar-nav navbar-right">
+							<li>
+								<a href="/logout">Log out</a>
+							</li>
+							{{else}}
+								<a href="/signin">Sign in</a>
+							</li>
+							{{/if}}
+						</ul>
+					</div>
+				</div>
+			</nav>
+			{{#if error}}
+			<p class="alert alert-warning">{{error}}</p>
+			{{/if}}
+			{{#if success}}
+			<p class="alert alert-success">{{success}}</p>
+			{{/if}}
+			{{#if notice}}
+			<p class="alert alert-info">{{notice}}</p>
+			{{/if}}
+{{{body}}}		</div>
+		<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.0/jquery.min.js"></script>
+		<script src="//netdna.bootstrapcdn.com/bootstrap/3.1.1/js/bootstrap.min.js"></script>
+	</body>
+</html>
