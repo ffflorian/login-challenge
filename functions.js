@@ -10,7 +10,8 @@ exports.localReg = function (username, password) {
 	var user = {
 		"username": username,
 		"password": hash,
-		"avatar": "https://raw.githubusercontent.com/cburmeister/placepuppy/master/placepuppy/static/img/puppy.jpeg"
+		"avatar": "https://raw.githubusercontent.com/cburmeister/placepuppy/master/placepuppy/static/img/puppy.jpeg",
+		"strategy": "Local"
 	}
 	var conString = "postgres://postgres:bla123@localhost/challenge";
 	var client = new pg.Client(conString);
@@ -66,6 +67,7 @@ exports.localAuth = function (username, password) {
 				return console.error('error running query', err);
 			}
 			if (result.rows.length > 0) {
+				var row = result.rows[0];
 				console.log("row:");
 				console.log(row);
 				console.log('username found');
@@ -76,7 +78,8 @@ exports.localAuth = function (username, password) {
 					var user = {
 						"username": username,
 						"password": hash,
-						"avatar": "https://raw.githubusercontent.com/cburmeister/placepuppy/master/placepuppy/static/img/puppy.jpeg"
+						"avatar": "https://raw.githubusercontent.com/cburmeister/placepuppy/master/placepuppy/static/img/puppy.jpeg",
+						"strategy": "Local"
 					}
 					deferred.resolve(user);
 				} else {
