@@ -9,7 +9,7 @@ var	express = require('express'),
 	https = require('https'),
 	fs = require('fs'),
 	exphbs = require('express-handlebars'),
-	logger = require('morgan'),
+	morgan = require('morgan'),
 	cookieParser = require('cookie-parser'),
 	bodyParser = require('body-parser'),
 	methodOverride = require('method-override'),
@@ -23,6 +23,10 @@ var	express = require('express'),
 var strategy = "";
 
 var config = require('./config.js');
+
+morgan.token('date', function(){
+	return new Date().toString()
+});
 
 var funct = require('./functions.js'); //funct file contains our helper functions for our Passport and database work
 var optionsSSL = {
@@ -146,7 +150,7 @@ function ensureAuthenticated(req, res, next) {
 
 //===============EXPRESS================
 // Configure Express
-app.use(logger('combined'));
+app.use(morgan('combined'));
 app.use(cookieParser());
 app.use(bodyParser.urlencoded({ extended: false }));
 app.use(bodyParser.json());
