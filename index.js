@@ -1,9 +1,6 @@
 //index.js/
 // nodeJS login app using ExpressJS and PassportJS
 
-var port = process.env.PORT || 8081; //select your port or let it pull from your .env file
-var portSSL = 8080;
-
 var	express = require('express'),
 	http = require('http'),
 	https = require('https'),
@@ -25,15 +22,17 @@ var strategy = "";
 var config = require('./config.js');
 
 morgan.token('date', function(){
-	return new Date().toString()
+	return new Date().toString();
 });
 
 var funct = require('./functions.js'); //funct file contains our helper functions for our Passport and database work
-var optionsSSL = {
-	ca: fs.readFileSync(config.fs.ca),
-	key: fs.readFileSync(config.fs.key),
-	cert: fs.readFileSync(config.fs.cert)
-};
+if (config.activateSSL) {
+	var optionsSSL = {
+		ca: fs.readFileSync(config.fs.ca),
+		key: fs.readFileSync(config.fs.key),
+		cert: fs.readFileSync(config.fs.cert)
+	};
+}
 var app = express();
 
 //===============PASSPORT=================
@@ -225,27 +224,35 @@ app.post('/login', passport.authenticate('local-signin', {
 
 app.get('/auth/twitter', passport.authenticate('twitter'));
 
-app.get('/auth/twitter/callback',
-		  passport.authenticate('twitter', { successRedirect: '/',
-											 failureRedirect: '/signin' }));
+app.get('/auth/twitter/callback', passport.authenticate('twitter', {
+	successRedirect: '/',
+	failureRedirect: '/signin' })
+);
 
 
-app.get('/auth/google', passport.authenticate('google', { scope: 'https://www.googleapis.com/auth/plus.login' }));
+app.get('/auth/google', passport.authenticate('google', {
+	scope: 'https://www.googleapis.com/auth/plus.login' })
+);
 
-app.get('/auth/google/callback',
-		  passport.authenticate('google', { successRedirect: '/',
-											 failureRedirect: '/signin' }));
+app.get('/auth/google/callback', passport.authenticate('google', {
+	successRedirect: '/',
+	failureRedirect: '/signin' })
+);
 
 //logs user out of site, deleting them from the session, and returns to homepage
 app.get('/logout', function(req, res){
 	var name = req.user.username;
-	console.log("LOGGING OUT " + req.user.username)
+	console.log("LOGGING OUT " + req.user.username);
 	req.logout();
 	res.redirect('/');
 	req.session.notice = "You have successfully been logged out, " + name + "!";
 });
 
 //===============PORT=================
-http.createServer(app).listen(port);
-https.createServer(optionsSSL, app).listen(portSSL);
-console.log("listening on " + port + " (http) and " + portSSL + " (https)");
+http.createServer(app).listen(config.port.http);
+if (config.activateSSL) {
+	https.createServer(optionsSSL, app).listen(config.port.https);
+	console.log("Listening on " + config.port.http + " (HTTP) and " + config.port.https + " (HTTPS)");
+} else {
+	console.log("Listening on " + config.port.http + " (HTTP)");
+}

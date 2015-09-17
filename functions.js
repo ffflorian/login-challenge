@@ -14,9 +14,8 @@ exports.localReg = function (username, password) {
 		"password": hash,
 		"avatar": "https://raw.githubusercontent.com/cburmeister/placepuppy/master/placepuppy/static/img/puppy.jpeg",
 		"strategy": "Local"
-	}
-	var conString = "postgres://postgres:bla123@localhost/challenge";
-	var client = new pg.Client(conString);
+	};
+	var client = new pg.Client(config.postgres);
 	//check if username is already assigned in our database
 
 	client.connect(function(err) {
@@ -54,8 +53,7 @@ exports.localReg = function (username, password) {
 //if user doesn't exist or password doesn't match tell them it failed
 exports.localAuth = function (username, password) {
 	var deferred = Q.defer();
-	var conString = config.postgres;
-	var client = new pg.Client(conString);
+	var client = new pg.Client(config.postgres);
 	//check if username is already assigned in our database
 
 	client.connect(function(err) {
@@ -82,7 +80,7 @@ exports.localAuth = function (username, password) {
 						"password": hash,
 						"avatar": "https://raw.githubusercontent.com/cburmeister/placepuppy/master/placepuppy/static/img/puppy.jpeg",
 						"strategy": "Local"
-					}
+					};
 					deferred.resolve(user);
 				} else {
 					console.log("PASSWORDS DO NOT MATCH");
@@ -95,29 +93,30 @@ exports.localAuth = function (username, password) {
 		});
 	});
 	return deferred.promise;
-}
+};
 
 exports.oAuth = function (profile, token, strategy) {
 	var deferred = Q.defer();
+	var user;
 	if (strategy == "twitter") {
 		console.log("using twitter strategy");
-		var user = {
+		user = {
 			"username": profile.displayName,
 			"password": token,
 			"avatar": profile.photos[0].value,
 			"strategy": "Twitter"
-		}
+		};
 		console.log(user);
 		deferred.resolve(user);
 	} else if (strategy == "google") {
 		console.log("using google strategy");
-		var user = {
+		user = {
 			"username": profile.name.givenName,
 			"password": token,
 			"avatar": profile.photos[0].value,
 			"strategy": "Google"
-		}
+		};
 		deferred.resolve(user);
 	}
 	return deferred.promise;
-}
+};
