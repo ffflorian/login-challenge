@@ -34,6 +34,7 @@ if (config.activateSSL) {
 	};
 }
 var app = express();
+app.disable('x-powered-by');
 
 //===============PASSPORT=================
 // Passport session setup.
